@@ -45,9 +45,9 @@
   file_picker_cross: ^4.3.0 # 文件选择组件
   ```
 - 参考代码:
-  [阿里云 OSS SDK Node.js](https://github.com/ali-sdk/ali-oss?spm=a2c4g.11186623.2.10.531526fd0vHN4r)
-  [阿里云 OSS SDK Python](https://github.com/aliyun/aliyun-oss-python-sdk?spm=a2c4g.11186623.2.4.910f46a1BYLLM4)
-  [一位前辈写的 Demo](https://github.com/luozhang002/postflutter-demo)
+  - [阿里云 OSS SDK Node.js](https://github.com/ali-sdk/ali-oss?spm=a2c4g.11186623.2.10.531526fd0vHN4r)
+  - [阿里云 OSS SDK Python](https://github.com/aliyun/aliyun-oss-python-sdk?spm=a2c4g.11186623.2.4.910f46a1BYLLM4)
+  - [一位前辈写的 Demo](https://github.com/luozhang002/postflutter-demo)
 
 ### 一些遗留问题
 
