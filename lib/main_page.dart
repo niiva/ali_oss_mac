@@ -97,6 +97,9 @@ class _MainPageState extends State<MainPage> {
                   imgUrl: info.url,
                   name: info.name,
                   lastModified: info.lastModified,
+                  deleteCallback: (name) {
+                    _deleteObject(name);
+                  },
                 ),
               );
             },
@@ -120,20 +123,41 @@ class _MainPageState extends State<MainPage> {
   }
 
   /// 上传图片
-  void _uploadFile(FilePickerCross file) async {
+  void _uploadObject(FilePickerCross file) async {
     await _aliyunOSS
         .postObject(
       file,
     )
         .then(
       (value) {
-        OSSObjectInfo info = _resultList.firstWhere((element) {
-          return element.name == value.name;
-        });
+        OSSObjectInfo info = _resultList.firstWhere(
+          (element) {
+            return element.name == value.name;
+          },
+        );
         info.name = value.name;
         info.lastModified = value.lastModified;
         info.url = value.url;
         setState(() {});
+      },
+    );
+  }
+
+  /// 删除
+  void _deleteObject(String objName) async {
+    await _aliyunOSS
+        .deleteObject(
+      objName,
+    )
+        .then(
+      (value) {
+        _resultList.removeWhere(
+          (element) {
+            return element.name == value;
+          },
+        );
+        setState(() {});
+        EasyLoading.showSuccess('$value已永久删除');
       },
     );
   }
@@ -195,7 +219,7 @@ class _MainPageState extends State<MainPage> {
           this.setState(() {
             _resultList.insert(0, info);
           });
-          _uploadFile(file);
+          _uploadObject(file);
         }
       },
     ).onError(

@@ -77,16 +77,18 @@ class AliyunOSS {
         'https://$bucketName.$endPoint',
         data: data,
       )
-          .then((value) {
-        info = OSSObjectInfo(
-          name: file.fileName,
-          lastModified:
-              DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()),
-          url: privateDomain.length > 0
-              ? '$privateDomain/${file.fileName}'
-              : 'https://$bucketName.$endPoint/${file.fileName}',
-        );
-      });
+          .then(
+        (value) {
+          info = OSSObjectInfo(
+            name: file.fileName,
+            lastModified:
+                DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now()),
+            url: privateDomain.length > 0
+                ? '$privateDomain/${file.fileName}'
+                : 'https://$bucketName.$endPoint/${file.fileName}',
+          );
+        },
+      );
     } on DioError catch (e) {
       if (null != e.response) {
         print(e.response.data);
@@ -134,6 +136,40 @@ class AliyunOSS {
   //   }
   // }
 
+  /// 删除object
+  Future<String> deleteObject(String objName) async {
+    String deleteSucceedName = '';
+    String date = _gmtTime();
+    String sign = _sign(
+      requestType: 'DELETE',
+      gmtTime: date,
+      resource: '/$bucketName/$objName',
+    );
+
+    Dio dio = Dio()
+      ..options.headers = {
+        'Host': '$bucketName.$endPoint',
+        'Date': '$date',
+        'Authorization': 'OSS $accessKeyID:$sign',
+      };
+
+    try {
+      await dio
+          .delete(
+        'https://$bucketName.$endPoint/$objName',
+      )
+          .then(
+        (value) {
+          deleteSucceedName = objName;
+        },
+      );
+    } catch (e) {
+      print(e.response.data);
+    }
+
+    return deleteSucceedName;
+  }
+
   /// 请求结果可能需要递归
   ///
   /// 所以这里做了个私有方法
@@ -165,19 +201,21 @@ class AliyunOSS {
         'https://$bucketName.$endPoint',
         queryParameters: params,
       )
-          .then((response) async {
-        resultList = _infoListFromXML(xml: response.toString());
-        // 阿里云oss的listObjects返回结果不支持排序
-        // 如果需要按时间排序就要把所有结果都取回来本地处理
-        String marker = _nextMaker(xml: response.toString());
-        if (marker.length > 0) {
-          await _listObjects(marker).then(
-            (value) {
-              resultList.addAll(value);
-            },
-          );
-        }
-      });
+          .then(
+        (response) async {
+          resultList = _infoListFromXML(xml: response.toString());
+          // 阿里云oss的listObjects返回结果不支持排序
+          // 如果需要按时间排序就要把所有结果都取回来本地处理
+          String marker = _nextMaker(xml: response.toString());
+          if (marker.length > 0) {
+            await _listObjects(marker).then(
+              (value) {
+                resultList.addAll(value);
+              },
+            );
+          }
+        },
+      );
     } on DioError catch (e) {
       if (null != e.response) {
         print(e.response.data);
