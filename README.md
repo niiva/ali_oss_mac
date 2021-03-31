@@ -4,8 +4,8 @@
 - 纯个人练习项目, 如果能碰巧帮助到需要的朋友, 那我甚是开心^ ^
 - 今天是学习 `Flutter` 的第 `23` 天, 纪念一下;
 
-![alt](https://images.jindu.link/aliyunoss_mac1.png)
-![alt](https://images.jindu.link/aliyunoss_mac2.png)
+![图1](https://images.jindu.link/aliyunoss_mac1.png)
+![图2](https://images.jindu.link/aliyunoss_mac2.png)
 
 ### 食用指南@.@
 
